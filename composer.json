@@ -26,10 +26,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "memochou1993\\Youtube\\YoutubeServiceProvider"
+                "memochou1993\\youtube-api\\src\\YoutubeServiceProvider"
             ],
             "aliases": {
-                "Youtube": "memochou1993\\Youtube\\Facades\\Youtube"
+                "Youtube": "memochou1993\\youtube-api\\src\\Facades\\Youtube"
             }
         }
     }
