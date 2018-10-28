@@ -1,6 +1,6 @@
 <?php
 
-namespace Memo;
+namespace Memo\Youtube;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
