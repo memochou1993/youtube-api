@@ -15,12 +15,22 @@
         "email": "memochou1993@hotmail.com"
     },
     "require": {
-        "php" : ">=5.6.0",
+        "php": "^7.0",
         "guzzlehttp/guzzle": "^6.1"
     },
     "autoload": {
         "psr-4": {
             "Memo\\Youtube\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Memo\\Youtube\\YoutubeServiceProvider"
+            ],
+            "aliases": {
+                "Youtube": "Memo\\Youtube\\Facades\\Youtube"
+            }
         }
     }
 }

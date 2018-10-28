@@ -31,14 +31,4 @@ class YoutubeServiceProvider extends ServiceProvider
 
         $this->app->alias(Youtube::class, 'youtube');
     }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [Youtube::class];
-    }
 }
