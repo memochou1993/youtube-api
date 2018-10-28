@@ -22,15 +22,5 @@
         "psr-4": {
             "Memo\\Youtube\\": "src/"
         }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Memo\\Youtube\\YoutubeServiceProvider"
-            ],
-            "aliases": {
-                "Youtube": "Memo\\Youtube\\Facades\\Youtube"
-            }
-        }
     }
 }
