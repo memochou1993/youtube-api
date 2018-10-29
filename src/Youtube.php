@@ -10,42 +10,56 @@ class Youtube
     protected $client;
     protected $url;
     protected $key;
-    protected $part;
     protected $params;
-    protected $q;
     
     public function __construct($key)
     {
         $this->client = new Client();
         $this->url = 'https://www.googleapis.com/youtube/v3';
         $this->key = $key;
-        $this->part = ['id', 'snippet'];
         $this->params = [];
-        $this->q = '';
+    }
+
+    protected function setResource($type)
+    {
+        $this->url .= '/' . $type;
+    }
+
+    protected function setParams()
+    {
+        if (func_num_args() === 1) {
+            foreach (func_get_arg(0) as $key => $value) {
+                $this->params[$key] = $value;
+            }
+        }
+
+        if (func_num_args() === 2) {
+            $this->params[func_get_arg(0)] = func_get_arg(1);
+        }
     }
 
     public function resource($type)
     {
-        $this->url .= '/' . $type;
+        $this->setResource($type);
 
         return $this;
     }
 
-    public function select($part)
+    public function select($part = ['id', 'snippet'])
     {
-        $this->part = is_array($part) ? $part : explode(', ', $part); 
+        $this->setParams('part', is_array($part) ? implode(', ', $part) : $part);
 
         return $this;
     }
 
     public function where()
     {
-        if (func_num_args() == 1 && is_array(func_get_arg(0))) {
-            $this->params = func_get_arg(0);
+        if (func_num_args() === 1) {
+            $this->setParams(func_get_arg(0));
         }
 
-        if (func_num_args() == 2 && is_string(func_get_arg(0)) && is_string(func_get_arg(1))) {
-            $this->params[func_get_arg(0)] = func_get_arg(1);
+        if (func_num_args() === 2) {
+            $this->setParams(func_get_arg(0), func_get_arg(1));
         }
 
         return $this;
@@ -58,47 +72,51 @@ class Youtube
 
     public function search($q)
     {
-        $this->url .= '/search';
+        $this->setResource('search');
 
-        $this->q = $q;
+        $this->setParams('q', $q);
 
         return $this->request();
     }
 
-    public function getChannel($username, $part = ['id', 'snippet', 'statistics'])
+    public function getChannel($username)
     {
-        $this->url .= '/channels';
+        $this->setResource('channels');
 
-        $this->part = is_array($part) ? $part : implode(', ', $part); 
-
-        $this->params = [
+        $this->setParams([
+            'part' => 'id, snippet, statistics',
             'forUsername' => $username,
-        ];
+        ]);
 
         return $this->request();
     }
 
     protected function request()
     {
-        $this->url .= 
-            '?' . 'key=' . $this->key . 
-            '&' . 'part=' . implode(', ', $this->part) . 
-            '&' . http_build_query($this->params);
+        $this->setParams('key', $this->key);
+
+        $url = $this->url . '?' . http_build_query($this->params);
 
         try {
-            $response = $this->client->get($this->url)->getBody();
+            $response = $this->client->get($url)->getBody();
 
             echo json_encode([
-                'url' => $this->url,
                 'success' => true,
+                'request' => [
+                    'url' => $this->url,
+                    'params' => $this->params,
+                ],
                 'response' => json_decode($response),
             ]);
         } catch (ClientException $e) {
             $response = $e->getResponse()->getBody()->getContents();
 
             echo json_encode([
-                'url' => $this->url,
                 'success' => false,
+                'request' => [
+                    'url' => $this->url,
+                    'params' => $this->params,
+                ],
                 'response' => json_decode($response),
             ]);
         }
