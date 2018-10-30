@@ -20,6 +20,18 @@ class Youtube
         $this->params = [];
     }
 
+    public function setKey($key)
+    {
+        $this->key = $key;
+
+        return $this;
+    }
+
+    public function getKey()
+    {
+        return $this->key;
+    }
+
     protected function setResource($type)
     {
         $this->url .= '/' . $type;
@@ -36,6 +48,21 @@ class Youtube
         if (func_num_args() === 2) {
             $this->params[func_get_arg(0)] = func_get_arg(1);
         }
+    }
+
+    protected function request()
+    {
+        $this->setParams('key', $this->key);
+
+        $url = $this->url . '?' . http_build_query($this->params);
+
+        try {
+            $response = $this->client->get($url)->getBody();
+        } catch (ClientException $e) {
+            $response = $e->getResponse()->getBody()->getContents();
+        }
+
+        return json_decode($response);
     }
 
     public function resource($type)
@@ -79,46 +106,27 @@ class Youtube
         return $this->request();
     }
 
-    public function getChannel($username)
+    public function getChannelByName($username, array $part = ['id', 'snippet', 'contentDetails', 'statistics', 'brandingSettings'])
     {
         $this->setResource('channels');
 
         $this->setParams([
-            'part' => 'id, snippet, statistics',
+            'part' => implode(', ', $part),
             'forUsername' => $username,
         ]);
 
         return $this->request();
     }
 
-    protected function request()
+    public function getChannelById($id, array $part = ['id', 'snippet', 'contentDetails', 'statistics', 'brandingSettings'])
     {
-        $this->setParams('key', $this->key);
+        $this->setResource('channels');
 
-        $url = $this->url . '?' . http_build_query($this->params);
+        $this->setParams([
+            'part' => implode(', ', $part),
+            'id' => $id,
+        ]);
 
-        try {
-            $response = $this->client->get($url)->getBody();
-
-            echo json_encode([
-                'success' => true,
-                'request' => [
-                    'url' => $this->url,
-                    'params' => $this->params,
-                ],
-                'response' => json_decode($response),
-            ]);
-        } catch (ClientException $e) {
-            $response = $e->getResponse()->getBody()->getContents();
-
-            echo json_encode([
-                'success' => false,
-                'request' => [
-                    'url' => $this->url,
-                    'params' => $this->params,
-                ],
-                'response' => json_decode($response),
-            ]);
-        }
+        return $this->request();
     }
 }
