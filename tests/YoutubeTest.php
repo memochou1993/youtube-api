@@ -30,9 +30,7 @@ class YoutubeTest extends TestCase
 
         $this->assertObjectHasAttribute('id', $response->items[0]);
         $this->assertObjectHasAttribute('snippet', $response->items[0]);
-        $this->assertObjectHasAttribute('contentDetails', $response->items[0]);
         $this->assertObjectHasAttribute('statistics', $response->items[0]);
-        $this->assertObjectHasAttribute('brandingSettings', $response->items[0]);
     }
 
     public function testGetChannelById()
@@ -44,9 +42,7 @@ class YoutubeTest extends TestCase
         
         $this->assertObjectHasAttribute('id', $response->items[0]);
         $this->assertObjectHasAttribute('snippet', $response->items[0]);
-        $this->assertObjectHasAttribute('contentDetails', $response->items[0]);
         $this->assertObjectHasAttribute('statistics', $response->items[0]);
-        $this->assertObjectHasAttribute('brandingSettings', $response->items[0]);
     }
 
     public function tearDown()

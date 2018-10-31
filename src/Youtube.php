@@ -106,7 +106,7 @@ class Youtube
         return $this->request();
     }
 
-    public function getChannelByName($username, array $part = ['id', 'snippet', 'contentDetails', 'statistics', 'brandingSettings'])
+    public function getChannelByName($username, array $part = ['id', 'snippet', 'statistics'])
     {
         $this->setResource('channels');
 
@@ -118,7 +118,7 @@ class Youtube
         return $this->request();
     }
 
-    public function getChannelById($id, array $part = ['id', 'snippet', 'contentDetails', 'statistics', 'brandingSettings'])
+    public function getChannelById($id, array $part = ['id', 'snippet', 'statistics'])
     {
         $this->setResource('channels');
 
