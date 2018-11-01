@@ -25,7 +25,9 @@ class Youtube
     /**
      * @var array
      */
-    protected $params = [];
+    protected $params = [
+        'part' => 'id, snippet'
+    ];
     
     /**
      * @param  string  $key
@@ -114,7 +116,7 @@ class Youtube
      * @param  string|array  $part
      * @return $this
      */
-    public function select($part = ['id', 'snippet'])
+    public function select($part)
     {
         $this->setParams('part', is_array($part) ? implode(', ', $part) : $part);
 
