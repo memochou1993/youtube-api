@@ -51,14 +51,6 @@ class Youtube
     }
 
     /**
-     * @return string
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
-
-    /**
      * @param  string  $type
      * @return void
      */
